@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For CSE_ZH06
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+CSE_ZH06  KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin KEYWORD2
+getPmData KEYWORD2
+sleep KEYWORD2
+wake KEYWORD2
+sendData KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
