@@ -9,7 +9,7 @@
   Version: 0.0.1
   License: MIT
   Source: https://github.com/CIRCUITSTATE/CSE_Touch
-  Last Modified: +05:30 12:28:14 PM 09-03-2025, Sunday
+  Last Modified: +05:30 15:36:39 PM 09-03-2025, Sunday
  */
 //======================================================================================//
 
@@ -52,7 +52,7 @@ CSE_Touch* CSE_Touch_Driver:: createDriver (CSE_Touch_t type, uint16_t width, ui
 
     default:
     // Return a null implementation that does nothing
-    // Serial.println ("CSE_Touch_Driver [INFO]: No driver selected..");
+    Serial.println ("CSE_Touch_Driver [INFO]: No driver selected..");
     return nullptr;
   }
 }

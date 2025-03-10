@@ -1,13 +1,14 @@
 {
-    "name": "CSE_ZH06",
+    "name": "CSE_Touch",
     "keywords": "sensor",
     "description": "Arduino library for reading Winsen ZH06 laser dust sensor.",
     "version": "0.0.1",
     "license": "MIT",
+    "exclude": ["extras"],
     "repository":
     {
         "type": "git",
-        "url": "https://github.com/CIRCUITSTATE/CSE_ZH06.git"
+        "url": "https://github.com/CIRCUITSTATE/CSE_Touch.git"
     },
     "authors":
     [

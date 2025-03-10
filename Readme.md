@@ -3,7 +3,7 @@
 
 # CSE_Touch
 
-**CSE_Touch** is an Arduino library from [*CIRCUITSTATE Electronics*](https://www.circuitstate.com/). It is a unified touch interface library for the Arduino platform. The advantage of using a unified library is that you can change the touch panel in your application code very easily with only minor changes to the code. CSE_Touch is desigend to be extensible and compatible with our CSE_UI library.Currently, the library supports the following touch controllers.
+**CSE_Touch** is an Arduino library from [*CIRCUITSTATE Electronics*](https://www.circuitstate.com/). It is a unified touch interface library for the Arduino platform. The advantage of using a unified library is that you can change the touch panel in your application code very easily with only minor changes to the code. CSE_Touch is designed to be extensible and compatible with our CSE_UI library.Currently, the library supports the following touch controllers.
 
 - FT6206
 - CST328
@@ -36,47 +36,7 @@ Based on the touch controller you want to use, the driver is automatically selec
 The following example shows how to read the PM values from the sensor and print them. You can find more examples in the [examples folder](/examples/).
 
 ```cpp
-#include <Arduino.h>
-#include <CSE_Touch.h>
 
-// Define the serial port pins here.
-#define  PIN_SERIAL_TX1  16
-#define  PIN_SERIAL_RX1  17
-
-CSE_Touch pmSensor (Serial1);  // Create a CSE_Touch object to access the sensor
-
-// Setup runs once.
-void setup() {
-  Serial.begin (115200);  // Initialize the debug serial port
-  Serial1.begin (9600, SERIAL_8N1, PIN_SERIAL_RX1, PIN_SERIAL_TX1); // Initialize the sensor serial port
-
-  pmSensor.begin(); // Initialize the sensor
-}
-
-// Inifinite loop.
-void loop() {
-  if (pmSensor.getPmData()) {
-    Serial.println ("Data received. Printing data..");
-    Serial.print ("PM1.0: ");
-    Serial.print (pmSensor.pm1);
-    Serial.println (" ug/m3");
-
-    Serial.print ("PM2.5: ");
-    Serial.print (pmSensor.pm25);
-    Serial.println (" ug/m3");
-
-    Serial.print ("PM10: ");
-    Serial.print (pmSensor.pm10);
-    Serial.println (" ug/m3");
-    Serial.println();
-  }
-  
-  else {
-    Serial.println ("Data not received. Retrying..");
-  }
-
-  delay (1000);
-}
 ```
 
 ## API Reference
