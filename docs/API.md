@@ -1,10 +1,10 @@
-# CSE_ZH06 Library API Reference
+# CSE_Touch Library API Reference
 
-Version 0.0.1, +05:30 09:47:56 PM 23-12-2024, Monday
+Version 0.0.1, +05:30 08:17:13 PM 10-03-2025, Monday
 
 ## Index
 
-- [CSE\_ZH06 Library API Reference](#cse_zh06-library-api-reference)
+- [CSE\_Touch Library API Reference](#cse_touch-library-api-reference)
   - [Index](#index)
   - [Dependencies](#dependencies)
   - [Configuration](#configuration)
@@ -21,6 +21,8 @@ Version 0.0.1, +05:30 09:47:56 PM 23-12-2024, Monday
 
 
 ## Dependencies
+
+This library does not have any permanent dependencies other than the standard Arduino libraries. However, depending on the touch controller you are using, you will need to install on of the following libraries and select the correct touch controller in the `platformio.ini` configuration file.
 
 - [CSE_MillisTimer](https://github.com/CIRCUITSTATE/CSE_MillisTimer)
 
