@@ -30,7 +30,7 @@ Version 0.0.1, +05:30 09:41:31 PM 10-03-2025, Monday
 
 ## Dependencies
 
-This library does not have any permanent dependencies other than the standard Arduino libraries. However, depending on the touch controller you are using, you will need to install on of the following libraries and select the correct touch controller in the `platformio.ini` configuration file. Check the [PIO-Examples](/extras/PIO-Examples/) to know how you can configure the library.
+This library does not have any permanent dependencies other than the standard Arduino libraries. However, depending on the touch controller you are using, you will need to install one of the following libraries and select the correct touch controller in the `platformio.ini` configuration file. Check the [PIO-Examples](/extras/PIO-Examples/) to know how you can configure the library.
 
 - [CSE_CST328](https://github.com/CIRCUITSTATE/CSE_CST328) - For CST328 capacitive touch controllers.
 - [CSE_FT6206](https://github.com/CIRCUITSTATE/CSE_FT6206) - For FT6206 capacitive touch controllers.
