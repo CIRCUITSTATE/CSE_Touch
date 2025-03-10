@@ -9,7 +9,7 @@
   Version: 0.0.1
   License: MIT
   Source: https://github.com/CIRCUITSTATE/CSE_Touch
-  Last Modified: +05:30 15:33:51 PM 09-03-2025, Sunday
+  Last Modified: +05:30 21:22:59 PM 10-03-2025, Monday
  */
 //======================================================================================//
 
@@ -62,7 +62,6 @@ class CSE_TouchPoint {
 class CSE_Touch {
   public:
     CSE_Touch() {}
-    virtual ~CSE_Touch() {}
     virtual void init (void) = 0;
     virtual void begin (void) = 0;
     virtual uint8_t setRotation (uint8_t rotation) = 0;

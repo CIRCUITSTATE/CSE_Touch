@@ -1,6 +1,6 @@
 # CSE_Touch Library API Reference
 
-Version 0.0.1, +05:30 08:17:13 PM 10-03-2025, Monday
+Version 0.0.1, +05:30 09:41:31 PM 10-03-2025, Monday
 
 ## Index
 
@@ -8,217 +8,317 @@ Version 0.0.1, +05:30 08:17:13 PM 10-03-2025, Monday
   - [Index](#index)
   - [Dependencies](#dependencies)
   - [Configuration](#configuration)
+  - [Enums](#enums)
+    - [`CSE_Touch_t`](#cse_touch_t)
   - [Classes](#classes)
-  - [Class `CSE_ZH06`](#class-cse_zh06)
+  - [Class `CSE_TouchPoint`](#class-cse_touchpoint)
     - [Variables](#variables)
-    - [`CSE_ZH06()`](#cse_zh06)
-    - [`~CSE_ZH06()`](#cse_zh06-1)
+    - [Operators](#operators)
+    - [`CSE_TouchPoint()`](#cse_touchpoint)
+  - [Class `CSE_Touch`](#class-cse_touch)
+    - [`CSE_Touch()`](#cse_touch)
+    - [`init()`](#init)
     - [`begin()`](#begin)
-    - [`getPmData()`](#getpmdata)
-    - [`sleep()`](#sleep)
-    - [`wake()`](#wake)
-    - [`sendData()`](#senddata)
+    - [`setRotation()`](#setrotation)
+    - [`getRotation()`](#getrotation)
+    - [`getWidth()`](#getwidth)
+    - [`getHeight()`](#getheight)
+    - [`isTouched()`](#istouched)
+    - [`getTouches()`](#gettouches)
+    - [`getPoint()`](#getpoint)
 
 
 ## Dependencies
 
-This library does not have any permanent dependencies other than the standard Arduino libraries. However, depending on the touch controller you are using, you will need to install on of the following libraries and select the correct touch controller in the `platformio.ini` configuration file.
+This library does not have any permanent dependencies other than the standard Arduino libraries. However, depending on the touch controller you are using, you will need to install on of the following libraries and select the correct touch controller in the `platformio.ini` configuration file. Check the [PIO-Examples](/extras/PIO-Examples/) to know how you can configure the library.
 
-- [CSE_MillisTimer](https://github.com/CIRCUITSTATE/CSE_MillisTimer)
+- [CSE_CST328](https://github.com/CIRCUITSTATE/CSE_CST328) - For CST328 capacitive touch controllers.
+- [CSE_FT6206](https://github.com/CIRCUITSTATE/CSE_FT6206) - For FT6206 capacitive touch controllers.
 
 ## Configuration
 
-Since the library supports accepting both Hardware and Software serial ports, the library will be automatically configured to use either of them based on the platform you are compiling the code for. For example, targets with only one hardware serial ports can only use software serial port. The macro `SOFTWARE_SERIAL_REQUIRED` is automatically defined for such targets and the `SoftwareSerial.h` library is loaded. For all other targets with more than one hardware serial ports, the `SOFTWARE_SERIAL_REQUIRED` macro is not defined and therefore can use any of the hardware serial ports.
+The library requires defining one of the following macros to enable one of the supported touch controllers.
 
-The number of hardware serial ports is defined using the `_HAVE_HWSERIAL1` macro. You can override or expand this behaviour in the `CSE_ZH06.h` file. Following are the defaults for the most common targets.
+- `ENABLE_FT6206`
+- `ENABLE_CST328`
+- `ENABLE_XPT2046`
 
-- Software Serial
-  - `ARDUINO_AVR_UNO`
-  - `ARDUINO_AVR_NANO`
-  - `ESP8266`
-- Hardware Serial
-  - `ARDUINO_AVR_MEGA2560`
-  - `ARDUINO_ARCH_ESP32`
+This can be done in your main application code or the `platformio.ini` configuration file.
+
+## Enums
+
+- `CSE_Touch_t` - The touch controller enum for the CSE_Touch library.
+
+### `CSE_Touch_t`
+
+This holds an enumerated list of supported touch controllers. This public enum can be used in your application code like the following:
+
+```cpp
+CSE_Touch_t touchController = CSE_Touch_t:: CSE_TOUCH_CST328;
+```
+
+#### Values
+
+- `CSE_TOUCH_NONE` (0) - No touch controller.
+- `CSE_TOUCH_XPT2046` (1) - XPT2046 capacitive touch controller.
+- `CSE_TOUCH_FT6206` (2) - FT6206 capacitive touch controller.
+- `CSE_TOUCH_CST328` (3) - CST328 capacitive touch controller.
 
 ## Classes
 
-* `CSE_ZH06` - The main class for wrapping the data and functions of the library.
+- `CSE_TouchPoint` - A generic class to manage touch points.
+- `CSE_Touch` - The main class for the CSE_Touch library.
+- `CSE_Touch_Driver` - The driver class for the CSE_Touch library.
 
-## Class `CSE_ZH06`
+## Class `CSE_TouchPoint`
+
+This is a generic class to manage touch points. You can read the touch data directly to these objects and manipulate them as necessary.
 
 ### Variables
 
 #### Public
 
-- `uint8_t rxData [32]` : Buffer to receive the data from the sensor. Initializes to `0`.
-- `uint8_t txData [9]` : Buffer to hold the data to send to the sensor. Initializes to `0`.
-- `uint16_t pm1` : PM 1.0 concentration in micrograms per cubic meter (ug/m3). Initializes to `0`.
-- `uint16_t pm25` : PM 2.5 concentration in micrograms per cubic meter (ug/m3). Initializes to `0`.
-- `uint16_t pm10` : PM 10.0 concentration in micrograms per cubic meter (ug/m3). Initializes to `0`.
+- `int16_t x` : The x coordinate of the touch point.
+- `int16_t y` : The y coordinate of the touch point.
+- `uint16_t z` : The z coordinate of the touch point. Used for pressure sensitive touch controllers.
+- `uint8_t id` : The id of the touch point. Used for multi-touch controllers.
+- `uint8_t state` : The state of the touch point. `0` not touched, `>0` touched.
 
-#### Private
+### Operators
 
-- `SoftwareSerial* _serial` : A pointer to a software serial port. Initializes to `nullptr`. This will only be used if the `SOFTWARE_SERIAL_REQUIRED` macro is defined.
+- `bool operator==` : Compared two touch points for equality.
+- `bool operator!=` : Compared two touch points for inequality.
 
-- `HardwareSerial* _serial` : A pointer to a hardware serial port. Initializes to `nullptr`. This will only be used if the `SOFTWARE_SERIAL_REQUIRED` macro is not defined.
+### `CSE_TouchPoint()`
 
-### `CSE_ZH06()`
-
-This constructor creates a new `CSE_ZH06` object. There are two overloads based on the parameter type. User can send a `HardwareSerial` or a `SoftwareSerial` port object. The type of constructor is determined by the macro `SOFTWARE_SERIAL_REQUIRED`. The supplied serial port is saved to the `_serial` variable.
-
-Throughout this documentation, an example `CSE_ZH06` object `sensor` will be used for examples.
+Creates a `CSE_TouchPoint` object. There are two overloads.
 
 #### Syntax 1
 
 ```cpp
-CSE_ZH06 (SoftwareSerial& swSerial);
+CSE_TouchPoint (void);
 ```
+
+Creates an empty touch point with `id` 0. This is should not be used in normal cases. Create touch points with unique IDs always.
 
 ##### Parameters
 
-- `swSerial` : A software serial port of type `SoftwareSerial`. Only allowed if the `SOFTWARE_SERIAL_REQUIRED` macro is defined.
+- None
 
 ##### Returns
 
-`CSE_ZH06` object.
+- `CSE_TouchPoint` object.
 
 #### Syntax 2
 
 ```cpp
-CSE_ZH06 (HardwareSerial& hwSerial);
+CSE_TouchPoint (int16_t x, int16_t y, int16_t z, uint8_t id);
 ```
+
+Creates a new touch point object with the provided data.
 
 ##### Parameters
 
-- `hwSerial` : A hardware serial port of type `HardwareSerial`. Only allowed if the `SOFTWARE_SERIAL_REQUIRED` macro is not defined.
+- `x` - The x coordinate of the touch point.
+- `y` - The y coordinate of the touch point.
+- `z` - The z coordinate of the touch point. Used for pressure sensitive touch controllers.
+- `id` - The id of the touch point. Used for multi-touch controllers.
 
 ##### Returns
 
-- `CSE_ZH06` object.
+- `CSE_TouchPoint` object.
 
-### `~CSE_ZH06()`
+## Class `CSE_Touch`
 
-Destroys the `CSE_ZH06` object.
+This is the main class for the CSE_Touch library. You can define your touch panel as a `CSE_Touch` object in your main application code and read/write data to it. There are no variables associated with this class and all of the functions (except the constructor) are `virtual` that will be overridden in the `CSE_Touch_Driver` class.
 
-#### Syntax
+### `CSE_Touch()`
 
-```cpp
-sensor.~CSE_ZH06();
-```
+This is the default constructor for the `CSE_Touch` class. This does nothing for now.
 
-##### Parameters
+### `init()`
 
-None
-
-##### Returns
-
-None
+Initializes the target touch controller. `init()` and `begin()` are the same.
 
 ### `begin()`
 
-Does nothing for now. The user must initialize the serial port they want to use before interacting with the sensor.
+Initializes the target touch controller. `init()` and `begin()` are the same.
+
+### `setRotation()`
+
+```cpp
+uint8_t setRotation (uint8_t rotation);
+```
+
+Sets the rotation of the touch controller. You need to set this to the same as the LCD screen you have. If the touch point and the LCD point are not matching, you can try the other three rotation options.
 
 #### Syntax
 
 ```cpp
-sensor.begin();
+uint8_t tsRotation = tsPanel.setRotation (rotation);
 ```
 
 ##### Parameters
 
-None
+- `rotation` - The rotation of the touch controller. `0` = 0°, `1` = 90°, `2` = 180°, `3` = 270°.
 
 ##### Returns
 
-None
+- `uint8_t` - The current rotation of the touch controller.
 
-### `getPmData()`
+### `getRotation()`
 
-Reads the PM data from the sensor. It first sends the request for the PM data and reads back the response. The response contains the PM data for PM1.0, PM2.5 and PM10. These values are then stored to the `pm1`, `pm25` and `pm10` variables and the user can directly read them. Additionally, the user can also pass a pointer to an array to store the data. The array should be of type `uint16_t` and should have a length of 3. Sending the array is optional.
+```cpp
+uint8_t getRotation (void);
+```
+
+Returns the current rotation of the touch controller.
 
 #### Syntax
 
 ```cpp
-sensor.getPmData (uint16_t* data = NULL);
+uint8_t tsRotation = tsPanel.getRotation();
 ```
 
 ##### Parameters
 
-- `uint16_t* data` : A pointer to an array of `uint16_t` type. Optional. Defaults to `NULL`.
+- None
 
 ##### Returns
 
-- `bool` : `true` if successful, `false` otherwise.
+- `uint8_t` - The current rotation of the touch controller.
 
-### `sleep()`
+### `getWidth()`
 
-Puts the sensor into sleep mode as specified in the datasheet. This function can actually put the sensor to sleep mode as well as wake it up from the sleep mode. Use the `toSleep` parameter to specify whether to put the sensor to sleep or wake it up. Sending the parameter is optional. By default, the value is `true` (sleep mode).
+```cpp
+uint16_t getWidth (void);
+```
+
+Returns the width of the touch controller. This should be the same as the LCD width.
 
 #### Syntax
 
 ```cpp
-sensor.sleep (bool toSleep = true);
+uint16_t tsWidth = tsPanel.getWidth();
 ```
 
 ##### Parameters
 
-- `bool toSleep` : `true` to put the sensor to sleep, `false` to wake it up. Optional. Defaults to `true`.
+- None
 
 ##### Returns
 
-- `bool` : `true` if successful, `false` otherwise.
+- `uint16_t` - The width of the touch controller.
 
-### `wake()`
+### `getHeight()`
 
-Wakes up the sensor from the sleep mode.
+```cpp
+uint16_t getHeight (void);
+```
+
+Returns the height of the touch controller. This should be the same as the LCD height.
 
 #### Syntax
 
 ```cpp
-sensor.wake();
+uint16_t tsHeight = tsPanel.getHeight();
 ```
 
 ##### Parameters
 
-None
+- None
 
 ##### Returns
 
-- `bool` : `true` if successful, `false` otherwise.
+- `uint16_t` - The height of the touch controller.
 
-### `sendData()`
+### `isTouched()`
 
-Private function. Sends some data to the sensor. There are two overloads.
+```cpp
+bool isTouched (void);
+bool isTouched (uint8_t id)
+```
 
-The first one expects a one way transfer and does not read back what the sensor sent.
+Checks if a the touch panel is being touched or if a specific touch point is being touched.
 
 #### Syntax 1
 
 ```cpp
-sendData (uint8_t* txData, uint8_t txLength)
+bool tsTouched = tsPanel.isTouched();
 ```
+
+For touch panels with multi-touch support, any touch will return `true`.
 
 ##### Parameters
 
-- `uint8_t* txData` : A pointer to an array of `uint8_t` type. This is the data you want to send.
-- `uint8_t txLength` : The length of the data you want to send. Should be less than or equal to `txData` length.
+- None
 
 ##### Returns
 
-None
+- `bool` - `true` if the touch panel is being touched, `false` otherwise.
 
 #### Syntax 2
 
-This sends data to the sensor and the response is saved to the `rxData` array. Receiving does not work as expected for now. So don't use this.
+```cpp
+bool tsTouched = tsPanel.isTouched (id);
+```
+
+Checks if a specific touch point is being touched.
+
+##### Parameters
+
+- `id` - The id of the touch point.
+
+##### Returns
+
+- `bool` - `true` if the touch point is being touched, `false` otherwise.
+
+### `getTouches()`
 
 ```cpp
-sendData (uint8_t* txData, uint8_t txLength, uint8_t* rxData, uint8_t rxLength);
+uint8_t getTouches (void);
+```
+
+Returns the number of touches on the touch panel.
+
+#### Syntax
+
+```cpp
+uint8_t tsTouches = tsPanel.getTouches();
 ```
 
 ##### Parameters
 
-- `uint8_t* txData` : A pointer to an array of `uint8_t` type. This is the data you want to send.
-- `uint8_t txLength` : The length of the data you want to send. Should be less than or equal to `txData` length.
-- `uint8_t* rxData` : A pointer to an array of `uint8_t` type. This is the location to save the data you want to receive.
-- `uint8_t rxLength` : The length of the data you want to receive. Should be less than or equal to `rxData` length.
+- None
+
+##### Returns
+
+- `uint8_t` - The number of touches on the touch panel.
+
+### `getPoint()`
+
+```cpp
+CSE_TouchPoint getPoint (uint8_t id);
+```
+
+Returns the position of a specific touch point as a `CSE_TouchPoint` object. The `id` is optional and defaults to `0` if not provided.
+
+#### Syntax
+
+```cpp
+CSE_TouchPoint tsPoint = tsPanel.getPoint();
+CSE_TouchPoint tsPoint = tsPanel.getPoint (id);
+```
+
+##### Parameters
+
+- `id` - The id of the touch point. Defaults to `0`.
+
+##### Returns
+
+- `CSE_TouchPoint` - The position of the touch point as a `CSE_TouchPoint` object.
+
+
+
+
 

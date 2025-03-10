@@ -26,7 +26,7 @@ Currently, the following touch controllers are supported.
 
 The `=1` is how you tell PIO to define a macro in your main project. If the value is `0` the macro will not be defined. You can either put the value as `0` or comment out an unused macro. Only one touch controller should be enabled at a time.
 
-The dependencies are added under the `lib_deps` option. You also need to add the correct touch controller library here. Since the examples reside inside the `CSE_Touch` library folder, the dependencies are added as backward traversed symlinks. This assumes that all of the dependencies are installed under the `libraries` folder.
+The dependencies are added under the `lib_deps` option. You also need to add the correct touch controller library here. Since the examples reside inside the `CSE_Touch` library folder, the dependencies are added as backward traversed symbolic links (symlink). This assumes that all of the dependencies are installed under the `libraries` folder.
 
 ```ini
 ; Assuming the dependencies are installed in the Arduino `libraries` folder
