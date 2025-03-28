@@ -9,7 +9,7 @@
   Version: 0.0.1
   License: MIT
   Source: https://github.com/CIRCUITSTATE/CSE_Touch
-  Last Modified: +05:30 21:22:59 PM 10-03-2025, Monday
+  Last Modified: +05:30 23:28:25 PM 26-03-2025, Wednesday
  */
 //======================================================================================//
 
@@ -22,6 +22,7 @@
 #ifndef CSE_TOUCH_H
 #define CSE_TOUCH_H
 
+// List of supported touch controllers.
 enum CSE_Touch_t {
   CSE_TOUCH_NONE = 0,
   CSE_TOUCH_XPT2046 = 1,
@@ -31,9 +32,10 @@ enum CSE_Touch_t {
 
 //===================================================================================//
 
+// Generic touch point class for storing touch information.
 class CSE_TouchPoint {
   public:
-    CSE_TouchPoint (void){
+    CSE_TouchPoint (void) {
       x = 0;
       y = 0;
       z = 0;
@@ -59,6 +61,7 @@ class CSE_TouchPoint {
 
 //===================================================================================//
 
+// Main class for the touch panel.
 class CSE_Touch {
   public:
     CSE_Touch() {}
@@ -76,6 +79,7 @@ class CSE_Touch {
 
 //===================================================================================//
 
+// An abstract class for touch drivers.
 class CSE_Touch_Driver {
   public:
     // Factory method - parameters cover most common configurations

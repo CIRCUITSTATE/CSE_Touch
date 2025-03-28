@@ -1,6 +1,11 @@
 
 
 #
+### **+05:30 09:35:07 PM 28-03-2025, Friday**
+
+  - Updated `FT6206` support.
+
+#
 ### **+05:30 08:07:08 PM 10-03-2025, Monday**
 
   - Added Readme's to the examples.

@@ -2,73 +2,104 @@
 //======================================================================================//
 /*
   Filename: CSE_FT6206_Driver.cpp
-  Description: FT6206 interface driver for the CSE_Touch Arduino library.
+  Description: CSE_TOUCH_DRIVER interface driver for the CSE_Touch Arduino library.
   Framework: Arduino, PlatformIO
   Author: Vishnu Mohanan (@vishnumaiea, @vizmohanan)
   Maintainer: CIRCUITSTATE Electronics (@circuitstate)
   Version: 0.0.1
   License: MIT
   Source: https://github.com/CIRCUITSTATE/CSE_Touch
-  Last Modified: +05:30 12:35:52 PM 09-03-2025, Sunday
+  Last Modified: +05:30 22:40:59 PM 26-03-2025, Wednesday
  */
 //======================================================================================//
 
 #ifndef CSE_FT6206_DRIVER_H
 #define CSE_FT6206_DRIVER_H
 
-#include <Wire.h>
+//============================================================================================//
+
 #include "CSE_Touch.h"
 #include <CSE_FT6206.h>
 
+#define   CSE_TOUCH_DRIVER    FT6206
+
+//============================================================================================//
+
 class CSE_FT6206_Driver : public CSE_Touch {
   private:
-    CSE_FT6206* FT6206;
+    CSE_FT6206* CSE_TOUCH_DRIVER;
     uint16_t width, height;
     uint8_t pinRst, pinIrq;
     TwoWire* wire;
-    
+  
+  //--------------------------------------------------------------------------------------------//
+  
   public:
 
   CSE_FT6206_Driver (uint16_t w, uint16_t h, TwoWire* tw, uint8_t rst, uint8_t irq) : width (w), height (h), wire (tw), pinRst (rst), pinIrq (irq) {
-    FT6206 = new CSE_FT6206 (width, height, wire, pinRst);
+    CSE_TOUCH_DRIVER = new CSE_FT6206 (w, h, tw, rst, irq);
   }
+
+  //--------------------------------------------------------------------------------------------//
   
   void init (void) override {
-    FT6206->begin();
+    CSE_TOUCH_DRIVER->begin();
     return;  // Initialization done in begin()
   }
+
+  //--------------------------------------------------------------------------------------------//
   
   void begin (void) override {
-    FT6206->begin();
-    return
+    CSE_TOUCH_DRIVER->begin();
+    return;
   }
+
+  //--------------------------------------------------------------------------------------------//
   
   uint8_t setRotation (uint8_t r) override {
-    return FT6206->setRotation (r);
+    return CSE_TOUCH_DRIVER->setRotation (r);
   }
+
+  //--------------------------------------------------------------------------------------------//
   
   uint8_t getRotation (void) override {
-    return FT6206->getRotation();
+    return CSE_TOUCH_DRIVER->getRotation();
   }
+
+  //--------------------------------------------------------------------------------------------//
   
   uint16_t getWidth (void) override {
-    return FT6206->getWidth();
+    return CSE_TOUCH_DRIVER->getWidth();
   }
+
+  //--------------------------------------------------------------------------------------------//
   
   uint16_t getHeight (void) override {
-    return FT6206->getHeight();
+    return CSE_TOUCH_DRIVER->getHeight();
   }
+
+  //--------------------------------------------------------------------------------------------//
   
   bool isTouched (void) override {
-    return FT6206->isTouched();
+    return CSE_TOUCH_DRIVER->isTouched();
   }
+
+  //--------------------------------------------------------------------------------------------//
+
+  bool isTouched (uint8_t id) override {
+    return CSE_TOUCH_DRIVER->isTouched ((uint8_t) id);
+  }
+
+  //--------------------------------------------------------------------------------------------//
   
   uint8_t getTouches (void) override {
-    return FT6206->getTouches();
+    return CSE_TOUCH_DRIVER->getTouches();
   }
+
+  //--------------------------------------------------------------------------------------------//
   
   CSE_TouchPoint getPoint (uint8_t n) override {
-    TS_Point p = FT6206->getPoint();
+    CSE_TouchPoint p = CSE_TOUCH_DRIVER->getPoint();
 
     CSE_TouchPoint cse_tp;
     cse_tp.x = p.x;
@@ -78,5 +109,7 @@ class CSE_FT6206_Driver : public CSE_Touch {
     return cse_tp;
   }
 };
+
+//============================================================================================//
 
 #endif // CSE_FT6206_DRIVER_H

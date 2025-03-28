@@ -1,5 +1,5 @@
 
-//======================================================================================//
+//============================================================================================//
 /*
   Filename: CSE_CST328_Driver.cpp
   Description: CST328 interface driver for the CSE_Touch Arduino library.
@@ -9,9 +9,9 @@
   Version: 0.0.1
   License: MIT
   Source: https://github.com/CIRCUITSTATE/CSE_Touch
-  Last Modified: +05:30 15:33:34 PM 09-03-2025, Sunday
+  Last Modified: +05:30 21:03:04 PM 26-03-2025, Wednesday
  */
-//======================================================================================//
+//============================================================================================//
 
 #ifndef CSE_CST328_DRIVER_H
 #define CSE_CST328_DRIVER_H
